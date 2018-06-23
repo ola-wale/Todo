@@ -13,6 +13,8 @@ const newItem = form => {
       todo["item"] = form.item.value;
       todo["priority"] = form.priority.value;
       ulListItem.insertAdjacentHTML("beforeend", getListTemplate(todo));
+    } else {
+      alert(xhr.responseText ? xhr.responseText : "an error has occurred Please check your internet connection");
     }
   };
   /**
@@ -32,17 +34,22 @@ const newItem = form => {
 const loadTodos = () => {
   var xhr = new XMLHttpRequest();
   xhr.onload = () => {
-    document.querySelector('#loader').remove(); //remove the loader
-    let todos = JSON.parse(xhr.responseText);
-    if (todos.length) {
-      for (var index in todos) {
-        //append todos
-        let todo = todos[index];
-        ulListItem.insertAdjacentHTML("beforeend", getListTemplate(todo));
+    if (xhr.status == 200) {
+      document.querySelector('#loader').remove(); //remove the loader
+      let todos = JSON.parse(xhr.responseText);
+      if (todos.length) {
+        for (var index in todos) {
+          //append todos
+          let todo = todos[index];
+          ulListItem.insertAdjacentHTML("beforeend", getListTemplate(todo));
+        }
+      } else {
+        document.querySelector('#empty-todos-state').style.display = 'block';
       }
-    } else {
-      document.querySelector('#empty-todos-state').style.display = 'block';
-    }
+  } else {
+    document.querySelector('#loader').remove(); //remove the loader
+    alert("error loading todo items");
+  }
   };
   xhr.onerror = () => {
     document.querySelector('#loader').remove(); //remove the loader
@@ -59,8 +66,12 @@ const markAsCompleted = todoId => {
   let list = document.querySelector("li#todo-" + todoId);
   var xhr = new XMLHttpRequest();
   xhr.onload = () => {
-    list.querySelector(".button").remove();
-    list.classList.add("complete");
+    if (xhr.status == 200) {
+      list.querySelector(".button").remove();
+      list.classList.add("complete");
+    } else {
+      alert("an error occured while trying to mark this todo item as completed");
+    }
   }
   xhr.open("post", "functions.php?method=mark_todo_as_complete", true);
   xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
