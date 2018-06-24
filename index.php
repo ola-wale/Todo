@@ -1,7 +1,7 @@
 <?php ?>
 <html>
 <head>
-    <title>Todo - Flightfox</title>
+    <title>Todo - Ffox</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="css/styles.css" rel="stylesheet">
 </head>
